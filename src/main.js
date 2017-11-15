@@ -5,7 +5,7 @@ import AddProduct from './screens/AddProduct.js';
 
 const Navigator = StackNavigator({
   ShoppingList: { screen: ShoppingList },
-  // AddProduct: { screen: AddProduct }
+  AddProduct: { screen: AddProduct }
 });
 
 export default class App extends React.Component {

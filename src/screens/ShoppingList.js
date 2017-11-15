@@ -76,7 +76,7 @@ export default class ShoppingList extends Component {
                     </Body>
                     <Right>
                       <CheckBox
-                        checked={false}
+                        checked={p.gotten}
                         onPress={this.handleProductPress.bind(this, p)}
                       />
                     </Right>
