@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert } from 'react-native';
+import { Alert, Platform, Linking } from 'react-native';
 import {
   Body,
   Container,
@@ -11,6 +11,7 @@ import {
   ListItem,
   Fab,
   Icon,
+  Button
 } from 'native-base';
 
 export default class ShoppingList extends Component {
@@ -22,6 +23,38 @@ export default class ShoppingList extends Component {
     super(props);
     this.state = {
       products: [{ id: 1, name: 'bread' }, { id: 2, name: 'egg' }]
+    };
+  }
+
+  componentDidMount() {
+    if (Platform.OS === 'ios') {
+      Linking.addEventListener('url', this.handleOpenURL);
+    }
+
+    Linking.getInitialURL().then((url) => {
+      if (url) {
+        this.handleOpenURL({ url });
+      }
+    }).catch(err => console.warn('An error occurred', err));
+  }
+
+  componentWillUnmount() {
+    Linking.removeEventListener('url', this.handleOpenURL);
+  }
+
+  handleOpenURL = (event) => {
+    console.log(event.url);
+    this.navigate(event.url);
+  }
+
+  navigate = (url) => {
+    const { navigate } = this.props.navigation;
+    const route = url.replace(/.*?:\/\//g, '');
+    const id = route.match(/\/([^\/]+)\/?$/)[1];
+    const routeName = route.split('/')[0];
+
+    if (routeName === 'testg') {
+      navigate('ColorContainer', { id });
     };
   }
 
@@ -50,6 +83,10 @@ export default class ShoppingList extends Component {
       },
       productsInList: this.state.products
     });
+  }
+
+  handleOpenColorContainer() {
+    this.props.navigation.navigate('ColorContainer');
   }
 
   handleClearProductPress() {
@@ -93,6 +130,12 @@ export default class ShoppingList extends Component {
         >
           <Icon name="add" />
         </Fab>
+        {/* <Button
+          style={{ flex: 1, backgroundColor: 'green', justifyContent: 'center' }}
+          onPress={this.handleOpenColorContainer.bind(this)}
+        >
+          <Icon name="add" />
+        </Button> */}
         <Fab
           style={{ backgroundColor: 'red' }}
           position="bottomLeft"
